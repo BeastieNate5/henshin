@@ -1,33 +1,12 @@
-use clap::{Parser, Subcommand};
+use clap::Parser;
 
-#[derive(Parser)]
-#[command(name = "hsn")]
-struct Cli {
-    #[command(subcommand)]
-    command: Commands
-}
+use crate::cli::Cli;
 
-#[derive(Subcommand)]
-enum Commands {
-    Add {
-        path: String
-    },
-    Init,
-    List
-}
+mod cli;
+mod core;
+mod commands;
 
 fn main() {
     let cli = Cli::parse();
-
-    match cli.command {
-        Commands::Add { path } => {
-            println!("Add {path}");
-        }
-
-        Commands::Init => {
-
-        }
-        
-        Commands::List => println!("List")
-    };
+    commands::run(cli);
 }
