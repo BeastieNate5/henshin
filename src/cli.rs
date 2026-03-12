@@ -17,7 +17,10 @@ pub enum Commands {
         #[command(subcommand)]
         command: ThemeCommands
     },
-    Init
+    Init {
+        #[arg(long = "theme-dir", short = 't')]
+        theme_dir: Option<String>
+    }
 }
 
 #[derive(Subcommand)]
