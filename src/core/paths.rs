@@ -10,6 +10,24 @@ pub fn create_state_path() -> Result<PathBuf> {
     Ok(path)
 }
 
+pub fn create_theme_dir(theme_dir: Option<&str>) -> Result<()> {
+    let theme_dir = match theme_dir {
+        Some(dir) => PathBuf::from(dir),
+        None => {
+            let mut theme_path = get_state_path()?;
+            theme_path.push("themes"); 
+            theme_path
+        }
+    };
+
+
+    if !theme_dir.exists() {
+        fs::create_dir_all(theme_dir)?;
+    }
+
+    Ok(())
+}
+
 pub fn get_state_path() -> Result<PathBuf> {
     let path = dirs::state_dir()
         .context("XDG_STATE_HOME not found")?
@@ -22,7 +40,24 @@ pub fn get_state_path() -> Result<PathBuf> {
     Ok(path)
 }
 
-fn set_current_pointer(theme_dir: Option<String>) -> Result<()> {
-    os::unix::fs::symlink(original, link)
+pub fn set_current_pointer(state_path: PathBuf, theme_dir: Option<&str>) -> Result<()> {
+    let theme_dir = match theme_dir {
+        Some(dir) => PathBuf::from(dir),
+        None => {
+            let mut theme_dir = state_path.clone();
+            theme_dir.push("themes");
+            theme_dir
+        }
+    };
+
+    let mut current_pointer_path = state_path.clone();
+    current_pointer_path.push("current");
+
+    if !current_pointer_path.exists() {
+        os::unix::fs::symlink(theme_dir, current_pointer_path)
+            .context("Failed to create current pointer")?;
+    }
+
     Ok(())
 }
+
