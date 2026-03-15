@@ -4,30 +4,28 @@ use clap::{Parser, Subcommand};
 #[command(name = "hsn")]
 pub struct Cli {
     #[command(subcommand)]
-    pub command: Commands
+    pub command: Commands,
 }
 
 #[derive(Subcommand)]
 pub enum Commands {
     Add {
         name: String,
-        path: String
+        path: String,
     },
     Theme {
         #[command(subcommand)]
-        command: ThemeCommands
+        command: ThemeCommands,
     },
     Init {
         #[arg(long = "theme-dir", short = 't')]
-        theme_dir: Option<String>
-    }
+        theme_dir: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
 pub enum ThemeCommands {
     Create,
-    Load {
-        theme: String
-    },
-    List
+    Load { theme: String },
+    List,
 }

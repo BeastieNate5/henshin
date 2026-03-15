@@ -6,7 +6,7 @@ pub fn init_hsn(theme_dir: Option<String>) -> Result<()> {
 
     let state_path = paths::create_state_path()?;
     create_theme_dir(theme_dir)?;
-    set_current_pointer(state_path, theme_dir)?;
+    set_current_pointer(&state_path, theme_dir)?;
 
     Ok(())
 }
