@@ -3,20 +3,28 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs }: 
-  let
-    pkgs = nixpkgs.legacyPackages.x86_64-linux;
-  in
-  {
-    devShells.x86_64-linux.default = pkgs.mkShell {
-        packages = with pkgs; [
-          rustc
-          cargo
-          rustfmt
-          rust-analyzer
-        ];
-    };
-  };
+  outputs = { self, nixpkgs, flake-utils }: 
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            rustc
+            cargo
+            rustfmt
+            rust-analyzer
+          ];
+
+          shellHook = ''
+            echo "--- Henshin Dev Environment ---"
+            echo "Rust: $(rustc --version)"
+          '';
+        };
+      }
+    );
 }
