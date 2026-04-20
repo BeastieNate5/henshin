@@ -5,6 +5,7 @@ use crate::cli::Cli;
 mod cli;
 mod commands;
 mod core;
+mod config;
 
 fn main() {
     let cli = Cli::parse();
