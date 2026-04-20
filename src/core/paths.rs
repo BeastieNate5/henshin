@@ -4,8 +4,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::config::Config;
-
 pub fn get_hsn_base() -> Result<PathBuf> {
     dirs::state_dir()
         .context("Could not find XDG_STATE_HOME")
@@ -39,21 +37,6 @@ pub fn set_current_pointer<P: AsRef<Path>>(state_path: &Path, theme_dir: P) -> R
         os::unix::fs::symlink(theme_dir, current_pointer_path)
             .context("Failed to create current pointer")?;
     }
-
-    Ok(())
-}
-
-pub fn generate_config_file<P: AsRef<Path>>(state_path: &Path, theme_dir: P) -> Result<()> {
-    let theme_dir_str = theme_dir.as_ref().to_string_lossy().into_owned();
-    let config = Config::new(theme_dir_str);
-
-    let toml_content = toml::to_string_pretty(&config)
-        .context("Failed to serialize config to TOML")?;
-
-    let config_file_path = state_path.join("config.toml");
-
-    fs::write(&config_file_path, &toml_content)
-        .with_context(|| format!("Failed to write config file to {:?}", config_file_path))?;
 
     Ok(())
 }
