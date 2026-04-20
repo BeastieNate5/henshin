@@ -10,7 +10,7 @@ pub fn run(cli: Cli) -> Result<()> {
     match cli.command {
         Commands::Init { theme_dir } =>  {
             match init_hsn(theme_dir) {
-                Ok(_) => println!("[ \x1b[92mOK\x1b[0m ] dir successful"),
+                Ok(_) => println!("[ \x1b[92mOK\x1b[0m ] Init successful"),
                 Err(err) => println!("[ \x1b[91mERR\x1b[0m ] {err}"),
             }
         }
