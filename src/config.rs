@@ -3,9 +3,9 @@ use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
-    theme_dir: String,
-    files: HashMap<String, String>,
-    hooks: Hooks
+    pub theme_dir: String,
+    pub files: HashMap<String, String>,
+    pub hooks: Hooks
 }
 
 #[derive(Debug, Serialize, Deserialize)]

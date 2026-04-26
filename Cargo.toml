@@ -8,4 +8,5 @@ anyhow = "1.0.102"
 clap = {version = "4.5.60", features = ["derive"]}
 dirs = "6.0.0"
 serde = { version = "1.0.228", features = ["derive"] }
+shellexpand = "3.1.2"
 toml = "1.1.2"
