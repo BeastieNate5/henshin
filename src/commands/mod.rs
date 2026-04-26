@@ -1,20 +1,21 @@
-use anyhow::Result;
+use anyhow::{Ok, Result};
 
 use crate::{
-    cli::{Cli, Commands, ThemeCommands}, commands::init::init_hsn
+    appcontext::AppContext, cli::{Cli, Commands, ThemeCommands}, commands::init::init_hsn, core::paths
 };
 
 mod init;
 
 pub fn run(cli: Cli) -> Result<()> {
+    let state_path = paths::get_hsn_base().map_err(|err| {
+        println!("[ - ] {err}");
+        
+    });
+
     match cli.command {
-        Commands::Init { theme_dir } =>  {
-            match init_hsn(theme_dir) {
-                Ok(_) => println!("[ \x1b[92mOK\x1b[0m ] Init successful"),
-                Err(err) => println!("[ \x1b[91mERR\x1b[0m ] {err}"),
-            }
+        Commands::Init { theme_dir } => init_hsn(theme_dir)?,
+        Commands::Add { name, path } => {
         }
-        Commands::Add { name, path } => {}
         Commands::Theme { command } => match command {
             ThemeCommands::Create => {}
             ThemeCommands::Load { theme } => {}

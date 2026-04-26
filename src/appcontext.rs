@@ -20,7 +20,6 @@ impl AppContext {
        Ok(ctx)
     }
 
-
     pub fn save(&self) -> Result<()> {
         let toml_string = toml::to_string_pretty(&self.config)
             .context("Failed to serailize config")?;
