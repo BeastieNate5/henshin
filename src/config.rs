@@ -10,7 +10,7 @@ pub struct Config {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Hooks {
-    post_load: Vec<String> 
+    pub post_load: Vec<String>
 }
 
 impl Config {
