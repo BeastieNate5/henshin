@@ -1,8 +1,7 @@
 use add::track_file;
-use anyhow::Result;
 
 use crate::{
-    appcontext::AppContext, cli::{Cli, Commands, ThemeCommands}, commands::init::init_hsn, core::paths
+    cli::{Cli, Commands, ThemeCommands}, commands::init::init_hsn
 };
 
 mod init;

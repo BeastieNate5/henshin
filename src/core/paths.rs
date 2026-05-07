@@ -40,3 +40,10 @@ pub fn set_current_pointer<P: AsRef<Path>>(state_path: &Path, theme_dir: P) -> R
 
     Ok(())
 }
+
+pub fn create_default_theme<P: AsRef<Path>>(theme_dir: P) -> Result<PathBuf> {
+    let default_theme_path = theme_dir.as_ref().join("default");
+    fs::create_dir_all(&default_theme_path)
+        .context("Failed to create default theme")?;
+    Ok(default_theme_path)
+}
