@@ -1,17 +1,27 @@
 {
-  description = "A very basic flake";
+  description = "Henshin Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = { self, nixpkgs, flake-utils }: 
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in
-      {
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
+
+      perSystem = { pkgs, self', ... }: {
+        packages.default = ( pkgs.callPackage ./package.nix {  } );
+
+        devShells.henshin = pkgs.mkShellNoCC {
+          packages = [ self'.packages.default ];
+        };
+
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             rustc
@@ -25,6 +35,6 @@
             echo "Rust: $(rustc --version)"
           '';
         };
-      }
-    );
+      };
+    };
 }
