@@ -45,4 +45,22 @@ impl AppContext {
 
         Ok(())
     }
+
+    pub fn list_themes(&self) -> Result<Vec<String>> {
+        let mut themes = Vec::new();
+        let theme_dir = &self.config.theme_dir;
+
+        for entry in fs::read_dir(&theme_dir)? {
+            let entry = entry?;
+            let path = entry.path();
+
+            if path.is_dir() {
+                if let Some(theme_name) = path.file_name().and_then(|f| f.to_str()) {
+                    themes.push(theme_name.to_string());
+                }
+            }
+        };
+
+        Ok(themes)
+    }
 }

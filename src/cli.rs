@@ -25,7 +25,7 @@ pub enum Commands {
 
 #[derive(Subcommand)]
 pub enum ThemeCommands {
-    Create,
+    Create { name: String },
     Load { theme: String },
     List,
 }
