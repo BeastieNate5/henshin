@@ -4,10 +4,7 @@ use anyhow::{Context, Result};
 
 use crate::{appcontext::AppContext, core::paths};
 
-pub fn track_file(name: &str, path: &str) -> Result<()> {
-    let mut ctx = AppContext::find_and_load()
-        .context("Failed to read config, please run henshin init")?;
-
+pub fn track_file(mut ctx: AppContext, name: &str, path: &str) -> Result<()> {
     let stored_path = path.to_string();
     let resolved_path = paths::resolve_path(path)?;
 
@@ -32,5 +29,6 @@ pub fn track_file(name: &str, path: &str) -> Result<()> {
     );
     ctx.save()?;
 
+    println!("[ \x1b[92mOK\x1b[0m ] '{name}' added");
     Ok(())
 }
