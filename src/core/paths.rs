@@ -1,6 +1,8 @@
 use anyhow::{Context, Ok, Result};
 use std::{
-    borrow::Cow, env, fs, os, path::{Path, PathBuf}
+    borrow::Cow,
+    env, fs, os,
+    path::{Path, PathBuf},
 };
 
 pub fn get_hsn_base() -> Result<PathBuf> {
@@ -42,8 +44,7 @@ pub fn set_current_pointer<P: AsRef<Path>>(state_path: &Path, theme_dir: P) -> R
 
 pub fn create_default_theme<P: AsRef<Path>>(theme_dir: P) -> Result<PathBuf> {
     let default_theme_path = theme_dir.as_ref().join("default");
-    fs::create_dir_all(&default_theme_path)
-        .context("Failed to create default theme")?;
+    fs::create_dir_all(&default_theme_path).context("Failed to create default theme")?;
     Ok(default_theme_path)
 }
 
@@ -54,6 +55,8 @@ pub fn resolve_path(path: &str) -> Result<PathBuf> {
     if p.is_absolute() {
         Ok(p)
     } else {
-        Ok(env::current_dir().context("Failed to resolve path")?.join(path))
+        Ok(env::current_dir()
+            .context("Failed to resolve path")?
+            .join(path))
     }
 }

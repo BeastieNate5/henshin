@@ -12,21 +12,15 @@ pub fn track_file(mut ctx: AppContext, name: &str, path: &str) -> Result<()> {
         anyhow::bail!("'{}' does not exist", path)
     }
 
-    let current_theme = paths::get_hsn_base()?
-        .join("current");
+    let current_theme = paths::get_hsn_base()?.join("current");
 
     let theme_file = current_theme.join(name);
 
-    fs::rename(&resolved_path, &theme_file)
-        .context("failed to move file")?;
+    fs::rename(&resolved_path, &theme_file).context("failed to move file")?;
 
-    os::unix::fs::symlink(&theme_file, &resolved_path)
-        .context("failed to symlink")?;
+    os::unix::fs::symlink(&theme_file, &resolved_path).context("failed to symlink")?;
 
-    ctx.config.files.insert(
-        name.to_owned(),
-        stored_path
-    );
+    ctx.config.files.insert(name.to_owned(), stored_path);
     ctx.save()?;
 
     println!("[ \x1b[92mOK\x1b[0m ] '{name}' added");

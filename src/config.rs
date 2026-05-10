@@ -1,16 +1,16 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub theme_dir: String,
     pub files: HashMap<String, String>,
-    pub hooks: Hooks
+    pub hooks: Hooks,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Hooks {
-    pub post_load: Vec<String>
+    pub post_load: Vec<String>,
 }
 
 impl Config {
@@ -18,7 +18,9 @@ impl Config {
         Self {
             theme_dir: theme_dir,
             files: HashMap::new(),
-            hooks: Hooks { post_load: Vec::new() }
-        } 
+            hooks: Hooks {
+                post_load: Vec::new(),
+            },
+        }
     }
 }

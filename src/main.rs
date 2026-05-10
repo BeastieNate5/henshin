@@ -2,11 +2,11 @@ use clap::Parser;
 
 use crate::cli::Cli;
 
+mod appcontext;
 mod cli;
 mod commands;
-mod core;
 mod config;
-mod appcontext;
+mod core;
 
 fn main() {
     let cli = Cli::parse();

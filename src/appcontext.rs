@@ -1,4 +1,7 @@
-use std::{fs, path::{Path, PathBuf}};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use anyhow::{Context, Ok, Result};
 
@@ -6,18 +9,18 @@ use crate::{config::Config, core::paths};
 
 pub struct AppContext {
     pub path: PathBuf,
-    pub config: Config
+    pub config: Config,
 }
 
 impl AppContext {
     pub fn create_new(state_path: &Path, theme_dir: String) -> Result<Self> {
-       let path = state_path.join("config.toml");
-       let config = Config::new(theme_dir);
+        let path = state_path.join("config.toml");
+        let config = Config::new(theme_dir);
 
-       let ctx = Self { path, config };
+        let ctx = Self { path, config };
         ctx.save()?;
 
-       Ok(ctx)
+        Ok(ctx)
     }
 
     pub fn load(state_path: &Path) -> Result<Self> {
@@ -27,8 +30,8 @@ impl AppContext {
 
         return Ok(Self {
             path: config_path,
-            config
-        })
+            config,
+        });
     }
 
     pub fn find_and_load() -> Result<Self> {
@@ -37,8 +40,8 @@ impl AppContext {
     }
 
     pub fn save(&self) -> Result<()> {
-        let toml_string = toml::to_string_pretty(&self.config)
-            .context("Failed to serailize config")?;
+        let toml_string =
+            toml::to_string_pretty(&self.config).context("Failed to serailize config")?;
 
         fs::write(&self.path, &toml_string)
             .with_context(|| format!("Failed to write config to {:?}", self.path))?;
@@ -59,7 +62,7 @@ impl AppContext {
                     themes.push(theme_name.to_string());
                 }
             }
-        };
+        }
 
         Ok(themes)
     }
@@ -69,22 +72,18 @@ impl AppContext {
         let current_theme_path = fs::read_link(current_path)?;
         let current_theme = current_theme_path.file_name().unwrap();
 
-        Ok(
-            current_theme.to_string_lossy().to_string()
-        )
+        Ok(current_theme.to_string_lossy().to_string())
     }
 
     pub fn create_blank_theme(&self, name: &str) -> Result<()> {
         let theme_path = format!("{}/{}", self.config.theme_dir, name);
-        fs::create_dir(theme_path)
-            .context("Failed to create theme directory")?;
+        fs::create_dir(theme_path).context("Failed to create theme directory")?;
         Ok(())
     }
 
     pub fn delete_theme(&self, name: &str) -> Result<()> {
         let theme_path = format!("{}/{}", self.config.theme_dir, name);
-        fs::remove_dir_all(theme_path)
-            .context("Failed to delete theme directory")?;
+        fs::remove_dir_all(theme_path).context("Failed to delete theme directory")?;
         Ok(())
     }
 }
