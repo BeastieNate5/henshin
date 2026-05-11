@@ -11,7 +11,7 @@ pub fn init_hsn(theme_dir: Option<String>) -> Result<()> {
     paths::set_current_pointer(&state_path, &default_theme_path)?;
 
     let theme_dir_str = theme_dir.to_string_lossy().to_string();
-    AppContext::create_new(&state_path, theme_dir_str)?;
+    AppContext::create_new(theme_dir_str)?;
 
     println!("[ \x1b[92mOK\x1b[0m ] Init successful");
     Ok(())
