@@ -4,6 +4,7 @@ use std::{
 };
 
 use anyhow::{Context, Ok, Result};
+use fs_extra::dir::CopyOptions;
 
 use crate::{config::Config, core::paths};
 
@@ -83,20 +84,31 @@ impl AppContext {
     }
 
     pub fn create_blank_theme(&self, name: &str) -> Result<()> {
-        let theme_path = format!("{}/{}", self.config.theme_dir, name);
+        let theme_path = self.config.theme_dir.join(name);
         fs::create_dir(theme_path).context("Failed to create theme directory")?;
         Ok(())
     }
 
+    pub fn create_theme_from(&self, from_theme_name: &str, new_theme_name: &str) -> Result<()> {
+        let from_theme_path = self.config.theme_dir.join(from_theme_name);
+        let new_theme_path = self.config.theme_dir.join(new_theme_name);
+
+        let mut options = CopyOptions::new();
+        options.copy_inside = true;
+
+        fs_extra::dir::copy(from_theme_path, new_theme_path, &options)?;
+        Ok(())
+    }
+
     pub fn delete_theme(&self, name: &str) -> Result<()> {
-        let theme_path = format!("{}/{}", self.config.theme_dir, name);
+        let theme_path = self.config.theme_dir.join(name);
         fs::remove_dir_all(theme_path).context("Failed to delete theme directory")?;
         Ok(())
     }
 
     pub fn switch_current(&self, name: &str) -> Result<()> {
         let current_path = self.state_path.join("current");
-        let theme_path = format!("{}/{}", self.config.theme_dir, name);
+        let theme_path = self.config.theme_dir.join(name);
 
         if fs::metadata(&current_path).is_ok() {
             fs::remove_file(&current_path)?
@@ -109,11 +121,7 @@ impl AppContext {
     }
 
     pub fn create_misisng_theme_files(&self) -> Result<()> {
-        let current_theme_path = PathBuf::from(format!(
-            "{}/{}",
-            self.config.theme_dir,
-            self.get_current_theme()?
-        )); // Make this a function later
+        let current_theme_path = self.config.theme_dir.join(self.get_current_theme()?);
         let current_theme_files = self.get_current_theme_files()?;
 
         for file in self.config.files.keys() {
@@ -129,7 +137,7 @@ impl AppContext {
 
     fn get_current_theme_files(&self) -> Result<Vec<String>> {
         let mut files = Vec::new();
-        let current_theme_path = format!("{}/{}", self.config.theme_dir, self.get_current_theme()?); // Make this a function later
+        let current_theme_path = self.config.theme_dir.join(self.get_current_theme()?);
 
         for entry in fs::read_dir(current_theme_path)? {
             let entry = entry?;

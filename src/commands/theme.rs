@@ -3,7 +3,7 @@ use anyhow::{Context, Result};
 
 pub fn handle_comamnd(ctx: AppContext, cmd: ThemeCommands) -> Result<()> {
     match cmd {
-        ThemeCommands::New { name } => create_theme(ctx, name.as_str()),
+        ThemeCommands::New { name, theme } => create_theme(ctx, name.as_str(), theme),
         ThemeCommands::List => list_themes(ctx),
         ThemeCommands::Delete { name } => delete_theme(ctx, name.as_str()),
         ThemeCommands::Current => current_theme(ctx),
@@ -28,8 +28,12 @@ fn current_theme(ctx: AppContext) -> Result<()> {
     Ok(())
 }
 
-fn create_theme(ctx: AppContext, name: &str) -> Result<()> {
-    ctx.create_blank_theme(name)?;
+fn create_theme(ctx: AppContext, name: &str, from_theme: Option<String>) -> Result<()> {
+    match from_theme {
+        Some(theme) => ctx.create_theme_from(theme.as_str(), name)?,
+        None => ctx.create_blank_theme(name)?
+    };
+
     println!("[ \x1b[92mOK\x1b[0m ] '{name}' theme created");
     Ok(())
 }

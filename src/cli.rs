@@ -25,7 +25,12 @@ pub enum Commands {
 
 #[derive(Subcommand)]
 pub enum ThemeCommands {
-    New { name: String },
+    New {
+        name: String,
+
+        #[arg(long="from")]
+        theme: Option<String>
+    },
     Load { name: String },
     Delete { name: String },
     List,
