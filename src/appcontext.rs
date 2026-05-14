@@ -135,7 +135,7 @@ impl AppContext {
         Ok(())
     }
 
-    fn get_current_theme_files(&self) -> Result<Vec<String>> {
+    pub fn get_current_theme_files(&self) -> Result<Vec<String>> {
         let mut files = Vec::new();
         let current_theme_path = self.config.theme_dir.join(self.get_current_theme()?);
 
@@ -149,5 +149,11 @@ impl AppContext {
         }
 
         Ok(files)
+    }
+
+    pub fn link_file_to_theme_file(&self, theme_file_name: &str, file_path: &str) -> Result<()> {
+        let theme_file_path = self.state_path.join("current").join(theme_file_name);
+        os::unix::fs::symlink(theme_file_path, file_path)?;
+        Ok(())
     }
 }

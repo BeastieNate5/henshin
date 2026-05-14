@@ -5,7 +5,6 @@ use anyhow::{Context, Result};
 use crate::{appcontext::AppContext, core::paths};
 
 pub fn track_file(mut ctx: AppContext, name: &str, path: &str) -> Result<()> {
-    let stored_path = path.to_string();
     let resolved_path = paths::resolve_path(path)?;
 
     if !resolved_path.exists() {

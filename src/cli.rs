@@ -21,6 +21,10 @@ pub enum Commands {
         #[arg(long = "theme-dir", short = 't')]
         theme_dir: Option<String>,
     },
+    Link {
+        theme_file: String,
+        path: String
+    }
 }
 
 #[derive(Subcommand)]

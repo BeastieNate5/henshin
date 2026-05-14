@@ -7,6 +7,7 @@ use crate::{
 mod add;
 mod init;
 mod theme;
+mod link;
 
 pub fn run(cli: Cli) {
     let result = match cli.command {
@@ -16,6 +17,7 @@ pub fn run(cli: Cli) {
             match cmd {
                 Commands::Add { name, path } => add::track_file(ctx, name.as_str(), path.as_str()),
                 Commands::Theme { command } => theme::handle_comamnd(ctx, command),
+                Commands::Link { theme_file, path } => link::link_file_to_theme(ctx, theme_file.as_str(), path.as_str()),
                 _ => unreachable!(),
             }
         }
