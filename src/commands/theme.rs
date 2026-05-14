@@ -38,8 +38,10 @@ fn delete_theme(ctx: AppContext, name: &str) -> Result<()> {
     let current_theme = ctx.get_current_theme()?;
 
     if current_theme == name {
-        println!("[ WARN ] Cannot delete current theme, please switch to another theme to delete '{name}'");
-        return Ok(())
+        println!(
+            "[ WARN ] Cannot delete current theme, please switch to another theme to delete '{name}'"
+        );
+        return Ok(());
     }
 
     ctx.delete_theme(name)?;

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 pub struct Config {
     pub theme_dir: String,
     pub files: HashMap<String, String>,
-    pub hooks: Hooks,
+    hooks: Hooks,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -16,7 +16,7 @@ struct Hooks {
 impl Config {
     pub fn new(theme_dir: String) -> Self {
         Self {
-            theme_dir: theme_dir,
+            theme_dir,
             files: HashMap::new(),
             hooks: Hooks {
                 post_load: Vec::new(),

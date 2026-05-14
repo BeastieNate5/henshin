@@ -1,5 +1,6 @@
 use std::{
-    fs, os, path::{Path, PathBuf}
+    fs, os,
+    path::{Path, PathBuf},
 };
 
 use anyhow::{Context, Ok, Result};
@@ -18,7 +19,11 @@ impl AppContext {
         let path = state_path.join("config.toml");
         let config = Config::new(theme_dir);
 
-        let ctx = Self { path, state_path, config };
+        let ctx = Self {
+            path,
+            state_path,
+            config,
+        };
         ctx.save()?;
 
         Ok(ctx)
@@ -29,11 +34,11 @@ impl AppContext {
         let config_str = fs::read_to_string(&config_path)?;
         let config = toml::from_str::<Config>(config_str.as_str())?;
 
-        return Ok(Self {
+        Ok(Self {
             path: config_path,
             state_path: state_path,
             config,
-        });
+        })
     }
 
     pub fn find_and_load() -> Result<Self> {
@@ -55,14 +60,14 @@ impl AppContext {
         let mut themes = Vec::new();
         let theme_dir = &self.config.theme_dir;
 
-        for entry in fs::read_dir(&theme_dir)? {
+        for entry in fs::read_dir(theme_dir)? {
             let entry = entry?;
             let path = entry.path();
 
-            if path.is_dir() {
-                if let Some(theme_name) = path.file_name().and_then(|f| f.to_str()) {
-                    themes.push(theme_name.to_string());
-                }
+            if path.is_dir()
+                && let Some(theme_name) = path.file_name().and_then(|f| f.to_str())
+            {
+                themes.push(theme_name.to_string());
             }
         }
 
@@ -104,14 +109,18 @@ impl AppContext {
     }
 
     pub fn create_misisng_theme_files(&self) -> Result<()> {
-        let current_theme_path = PathBuf::from(format!("{}/{}", self.config.theme_dir, self.get_current_theme()?)); // Make this a function later
+        let current_theme_path = PathBuf::from(format!(
+            "{}/{}",
+            self.config.theme_dir,
+            self.get_current_theme()?
+        )); // Make this a function later
         let current_theme_files = self.get_current_theme_files()?;
 
         for file in self.config.files.keys() {
-            if !current_theme_files.contains(file) {
-                if let Err(_err) = fs::write(current_theme_path.join(file), "") {
-                    eprintln!("[ \x1b[91mErr\x1b[0m ] Failed to create {file}");
-                }
+            if !current_theme_files.contains(file)
+                && let Err(_err) = fs::write(current_theme_path.join(file), "")
+            {
+                eprintln!("[ \x1b[91mErr\x1b[0m ] Failed to create {file}");
             }
         }
 
@@ -127,7 +136,7 @@ impl AppContext {
             let file_path = entry.path();
 
             if let Some(name) = file_path.file_name() {
-               files.push(name.to_string_lossy().to_string());
+                files.push(name.to_string_lossy().to_string());
             }
         }
 
