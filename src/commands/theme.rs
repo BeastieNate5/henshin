@@ -7,8 +7,7 @@ pub fn handle_comamnd(ctx: AppContext, cmd: ThemeCommands) -> Result<()> {
         ThemeCommands::List => list_themes(ctx),
         ThemeCommands::Delete { name } => delete_theme(ctx, name.as_str()),
         ThemeCommands::Current => current_theme(ctx),
-        ThemeCommands::Load { name } => load_theme(ctx, name.as_str()),
-        _ => unreachable!(),
+        ThemeCommands::Load { name } => load_theme(ctx, name.as_str())
     }
 }
 

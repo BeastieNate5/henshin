@@ -124,7 +124,7 @@ impl AppContext {
         let current_theme_path = self.config.theme_dir.join(self.get_current_theme()?);
         let current_theme_files = self.get_current_theme_files()?;
 
-        for file in self.config.files.keys() {
+        for file in self.config.files.iter() {
             if !current_theme_files.contains(file)
                 && let Err(_err) = fs::write(current_theme_path.join(file), "")
             {

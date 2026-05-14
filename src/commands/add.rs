@@ -20,7 +20,7 @@ pub fn track_file(mut ctx: AppContext, name: &str, path: &str) -> Result<()> {
 
     os::unix::fs::symlink(&theme_file, &resolved_path).context("failed to symlink")?;
 
-    ctx.config.files.insert(name.to_owned(), stored_path);
+    ctx.config.files.push(name.to_owned());
     ctx.save()?;
 
     println!("[ \x1b[92mOK\x1b[0m ] '{name}' added");

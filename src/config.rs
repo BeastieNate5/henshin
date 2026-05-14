@@ -4,7 +4,7 @@ use std::{collections::HashMap, path::PathBuf};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub theme_dir: PathBuf,
-    pub files: HashMap<String, String>,
+    pub files: Vec<String>,
     hooks: Hooks,
 }
 
@@ -17,7 +17,7 @@ impl Config {
     pub fn new(theme_dir: String) -> Self {
         Self {
             theme_dir: PathBuf::from(theme_dir),
-            files: HashMap::new(),
+            files: Vec::new(),
             hooks: Hooks {
                 post_load: Vec::new(),
             },
