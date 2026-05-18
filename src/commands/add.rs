@@ -11,7 +11,7 @@ pub fn track_file(mut ctx: AppContext, name: &str, path: &str) -> Result<()> {
         anyhow::bail!("'{}' does not exist", path)
     }
 
-    let current_theme = paths::get_hsn_base()?.join("current");
+    let current_theme = paths::get_hsn_state_path()?.join("current");
 
     let theme_file = current_theme.join(name);
 

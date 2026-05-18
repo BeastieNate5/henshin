@@ -9,19 +9,19 @@ use fs_extra::dir::CopyOptions;
 use crate::{config::Config, core::paths};
 
 pub struct AppContext {
-    pub path: PathBuf,
+    pub config_path: PathBuf,
     pub state_path: PathBuf,
     pub config: Config,
 }
 
 impl AppContext {
     pub fn create_new(theme_dir: String) -> Result<Self> {
-        let state_path = paths::get_hsn_base()?;
-        let path = state_path.join("config.toml");
+        let state_path = paths::get_hsn_state_path()?;
+        let config_path = paths::get_hsn_config_path()?.join("config.toml");
         let config = Config::new(theme_dir);
 
         let ctx = Self {
-            path,
+            config_path,
             state_path,
             config,
         };
@@ -30,29 +30,26 @@ impl AppContext {
         Ok(ctx)
     }
 
-    pub fn load(state_path: PathBuf) -> Result<Self> {
-        let config_path = state_path.join("config.toml");
+    pub fn load() -> Result<Self> {
+        let state_path = paths::get_hsn_state_path()?;
+        let config_path = paths::get_hsn_config_path()?.join("config.toml");
+
         let config_str = fs::read_to_string(&config_path)?;
         let config = toml::from_str::<Config>(config_str.as_str())?;
 
         Ok(Self {
-            path: config_path,
-            state_path: state_path,
+            config_path,
+            state_path,
             config,
         })
-    }
-
-    pub fn find_and_load() -> Result<Self> {
-        let path = paths::get_hsn_base()?;
-        Self::load(path)
     }
 
     pub fn save(&self) -> Result<()> {
         let toml_string =
             toml::to_string_pretty(&self.config).context("Failed to serailize config")?;
 
-        fs::write(&self.path, &toml_string)
-            .with_context(|| format!("Failed to write config to {:?}", self.path))?;
+        fs::write(&self.config_path, &toml_string)
+            .with_context(|| format!("Failed to write config to {:?}", self.config_path))?;
 
         Ok(())
     }

@@ -1,18 +1,23 @@
 use anyhow::{Context, Ok, Result};
 use std::{
-    borrow::Cow,
     env, fs, os,
     path::{Path, PathBuf},
 };
 
-pub fn get_hsn_base() -> Result<PathBuf> {
+pub fn get_hsn_state_path() -> Result<PathBuf> {
     dirs::state_dir()
         .context("Could not find XDG_STATE_HOME")
         .map(|p| p.join("hsn"))
 }
 
+pub fn get_hsn_config_path() -> Result<PathBuf> {
+    dirs::config_dir()
+        .context("Could not find XDG_CONFIG")
+        .map(|p| p.join("hsn"))
+}
+
 pub fn create_state_path() -> Result<PathBuf> {
-    let path = get_hsn_base()?;
+    let path = get_hsn_state_path()?;
     fs::create_dir_all(&path).context("Failed to create state directory")?;
     Ok(path)
 }
@@ -20,7 +25,7 @@ pub fn create_state_path() -> Result<PathBuf> {
 pub fn create_theme_dir<P: AsRef<Path>>(theme_dir: Option<P>) -> Result<PathBuf> {
     let theme_dir = match theme_dir {
         Some(dir) => PathBuf::from(dir.as_ref()),
-        None => get_hsn_base()?.join("themes"),
+        None => get_hsn_config_path()?.join("themes"),
     };
 
     if !theme_dir.exists() {

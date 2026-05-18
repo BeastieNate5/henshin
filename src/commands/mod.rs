@@ -13,7 +13,10 @@ pub fn run(cli: Cli) {
     let result = match cli.command {
         Commands::Init { theme_dir } => init_hsn(theme_dir),
         cmd => {
-            let ctx = AppContext::find_and_load().expect("Failed to read config, please run init");
+            let ctx = AppContext::load().unwrap_or_else(|err| {
+                println!("[ \x1b[91mErr\x1b[0m ] Failed to read config, please run init ({err})");
+                std::process::exit(1);
+            });
             match cmd {
                 Commands::Add { name, path } => add::track_file(ctx, name.as_str(), path.as_str()),
                 Commands::Theme { command } => theme::handle_comamnd(ctx, command),
