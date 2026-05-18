@@ -179,7 +179,6 @@ impl AppContext {
     pub fn execute_hook(&self) -> Result<()> {
         let current_path = self.state_path.join("current");
         let hook_path = current_path.join("theme_hook");
-        let theme_dir = &self.config.theme_dir;
 
         if !hook_path.exists() {
             return Ok(())
@@ -190,7 +189,7 @@ impl AppContext {
 
             let status = Command::new("sh")
                 .arg(&hook_path)
-                .current_dir(&theme_dir)
+                .current_dir(&current_path)
                 .status()?;
 
             if !status.success() {
