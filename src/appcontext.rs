@@ -55,6 +55,27 @@ impl AppContext {
         Ok(())
     }
 
+    pub fn ensure_initialized(&self) -> Result<()> {
+        let current_path = self.state_path.join("current");
+
+        if !self.state_path.exists() {
+            paths::create_state_path()?;
+
+            if !current_path.exists() {
+                let default_theme_path = self.config.theme_dir.join("default");
+
+                if !default_theme_path.exists() {
+                    paths::create_default_theme(&self.config.theme_dir)?;
+                }
+
+                paths::set_current_pointer(&self.state_path, &default_theme_path)?;
+                println!("[ \x1b[94mINFO\x1b[0m ] Re-initialized missing system state pointer.");
+            }
+        }
+
+        Ok(())
+    }
+
     pub fn list_themes(&self) -> Result<Vec<String>> {
         let mut themes = Vec::new();
         let theme_dir = &self.config.theme_dir;
