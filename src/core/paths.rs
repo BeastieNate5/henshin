@@ -22,6 +22,12 @@ pub fn create_state_path() -> Result<PathBuf> {
     Ok(path)
 }
 
+pub fn create_state_path() -> Result<PathBuf> {
+    let path = get_hsn_state_path()?;
+    fs::create_dir_all(&path).context("Failed to create state directory")?;
+    Ok(path)
+}
+
 pub fn create_theme_dir<P: AsRef<Path>>(theme_dir: Option<P>) -> Result<PathBuf> {
     let theme_dir = match theme_dir {
         Some(dir) => PathBuf::from(dir.as_ref()),
