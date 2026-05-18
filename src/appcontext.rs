@@ -1,6 +1,6 @@
 use std::{
     fs, os,
-    path::{Path, PathBuf}, thread::spawn,
+    path::PathBuf,
 };
 
 use anyhow::{Context, Ok, Result};

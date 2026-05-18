@@ -1,5 +1,5 @@
 use crate::{appcontext::AppContext, cli::ThemeCommands};
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 pub fn handle_comamnd(ctx: AppContext, cmd: ThemeCommands) -> Result<()> {
     match cmd {
