@@ -56,5 +56,6 @@ fn load_theme(ctx: AppContext, name: &str) -> Result<()> {
     ctx.switch_current(name)?;
     println!("[ \x1b[92mOK\x1b[0m ] Switched theme to '{name}'");
     ctx.create_misisng_theme_files()?;
+    ctx.execute_hook()?;
     Ok(())
 }

@@ -1,9 +1,10 @@
 use std::{
     fs, os,
-    path::{Path, PathBuf},
+    path::{Path, PathBuf}, thread::spawn,
 };
 
 use anyhow::{Context, Ok, Result};
+use std::process::Command;
 use fs_extra::dir::CopyOptions;
 
 use crate::{config::Config, core::paths};
@@ -151,6 +152,31 @@ impl AppContext {
     pub fn link_file_to_theme_file(&self, theme_file_name: &str, file_path: &str) -> Result<()> {
         let theme_file_path = self.state_path.join("current").join(theme_file_name);
         os::unix::fs::symlink(theme_file_path, file_path)?;
+        Ok(())
+    }
+
+    pub fn execute_hook(&self) -> Result<()> {
+        let current_path = self.state_path.join("current");
+        let hook_path = current_path.join("theme_hook");
+        let theme_dir = &self.config.theme_dir;
+
+        if !hook_path.exists() {
+            return Ok(())
+        }
+
+        if hook_path.is_file() {
+            println!("[ \x1b[94mINFO\x1b[0m ] Executing hook");
+
+            let status = Command::new("sh")
+                .arg(&hook_path)
+                .current_dir(&theme_dir)
+                .status()?;
+
+            if !status.success() {
+                eprintln!("[ \x1b[91mERR\x1b[0m ]Hook exited with error code")
+            }
+        }
+
         Ok(())
     }
 }
